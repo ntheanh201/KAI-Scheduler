@@ -178,6 +178,28 @@ var _ = Describe("SupportedTypes", func() {
 			Expect(plugin).NotTo(BeNil())
 			Expect(plugin.Name()).To(BeEquivalentTo("Default Grouper"))
 		})
+
+		It("should return default plugin when the Karta CRD is present but no Karta matches", func() {
+			otherGvk := metav1.GroupVersionKind{
+				Group:   "other.example.com",
+				Version: "v1",
+				Kind:    "Unrelated",
+			}
+			kubeClient = newHubFakeClientWithScheme(createHubTestKarta(otherGvk))
+			hub := NewDefaultPluginsHub(
+				kubeClient, false, false, false, true, queueLabelKey, nodePoolLabelKey, "", "",
+			)
+
+			probeGvk := metav1.GroupVersionKind{
+				Group:   "probe.example.com",
+				Version: "v1",
+				Kind:    "ProbeKind",
+			}
+			plugin := hub.GetPodGrouperPlugin(probeGvk)
+
+			Expect(plugin).NotTo(BeNil())
+			Expect(plugin.Name()).To(BeEquivalentTo("Default Grouper"))
+		})
 	})
 
 	Context("Skip Top Owner Resolution Tests", func() {

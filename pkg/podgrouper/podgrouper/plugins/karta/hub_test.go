@@ -31,6 +31,17 @@ func TestKartaHub_GetPodGrouperPluginNoKartaFound(t *testing.T) {
 	assert.Nil(t, result)
 }
 
+func TestKartaHub_GetPodGrouperPluginNoKartaFoundReturnsTrueNil(t *testing.T) {
+	kubeClient := newFakeClientWithScheme()
+	defaultPlugin := namedGrouper("Default Grouper")
+	plugin := NewKartaHub(kubeClient, defaultPlugin)
+
+	result := plugin.GetPodGrouperPlugin(createTestGVK())
+
+	assert.True(t, result == nil,
+		"expected a true nil interface so callers skip the plugin, got %#v", result)
+}
+
 func TestKartaHub_GetPodGrouperPluginKartaCRDMissingUsesRetryTTL(t *testing.T) {
 	var listCalls int
 	kubeClient := newFakeClientWithSchemeAndInterceptor(interceptor.Funcs{

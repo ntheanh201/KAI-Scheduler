@@ -1,0 +1,3 @@
+kind: Fixed
+body: |-
+  Return a true nil from the Karta fallback when no Karta matches, instead of a typed-nil grouper that panicked the caller

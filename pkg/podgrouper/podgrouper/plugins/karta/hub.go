@@ -45,7 +45,7 @@ func (g *KartaHub) GetPodGrouperPlugin(gvk metav1.GroupVersionKind) grouper.Grou
 	}
 
 	kartaGrouper, err := g.getKartaGrouperForGvk(context.Background(), gvk)
-	if err == nil {
+	if err == nil && kartaGrouper != nil {
 		return kartaGrouper
 	}
 	if apimeta.IsNoMatchError(err) {
